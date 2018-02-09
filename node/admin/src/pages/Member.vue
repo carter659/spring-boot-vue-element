@@ -7,7 +7,7 @@
         <el-input v-model="filters.query" placeholder="姓名/手机号等条件" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" v-on:click="getRows" icon="el-icon-search">查询</el-button>
+        <el-button type="primary" v-on:click="handleQuery" icon="el-icon-search">查询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" v-on:click="handleAdd" icon="el-icon-plus">添加</el-button>
@@ -165,7 +165,7 @@ let getRows = function() {
   this.pageLoading = true
 
   let params = {
-    page: (++this.page),
+    page: this.page,
     size: this.size,
     query: this.filters.query
   }
@@ -176,6 +176,7 @@ let getRows = function() {
       return
     //总数赋值
     this.total = res.data.total
+    this.page++;
     //页面元素赋值
     this.rows = res.data.rows
   }).catch(e => this.pageLoading = false)
@@ -215,6 +216,11 @@ let handleSubmit = function() {
   })
 }
 
+let handleQuery = function() {
+  this.page = 1
+  this.getRows()
+}
+
 let handleCurrentChange = function(val) {
   this.page = val
   this.getRows()
@@ -227,6 +233,8 @@ let initHeight = function() {
 export default {
   data: data,
   methods: {
+    //查询
+    handleQuery,
     //添加
     handleAdd,
     //修改
